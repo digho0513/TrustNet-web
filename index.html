@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,181 +8,198 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f172a">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg,#0f172a,#1e293b);
-  color:white;
-  overflow-x:hidden;
-}
-
-header {
-  text-align:center;
-  padding:40px 20px;
-}
-
-.logo {
-  width:120px;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%{transform:translateY(0px);}
-  50%{transform:translateY(-10px);}
-  100%{transform:translateY(0px);}
-}
-
-.container {
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
-}
-
-.card {
-  background: rgba(255,255,255,0.05);
-  padding:25px;
-  border-radius:20px;
-  backdrop-filter: blur(10px);
-  margin-bottom:20px;
-  transition:0.3s;
-}
-
-.card:hover {
-  transform:translateY(-5px);
-}
-
-input, select {
-  width:100%;
-  padding:10px;
-  margin-top:8px;
-  margin-bottom:15px;
-  border-radius:10px;
-  border:none;
-}
-
-button {
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(90deg,#3b82f6,#06b6d4);
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-button:hover {
-  opacity:0.8;
-}
-
-.progress {
-  height:20px;
-  background:#1e293b;
-  border-radius:10px;
-  overflow:hidden;
-  margin-top:10px;
-}
-
-.progress-bar {
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#22c55e,#3b82f6);
-  transition:width 1s ease;
-}
-
-footer {
-  text-align:center;
-  padding:20px;
-  font-size:14px;
-  opacity:0.6;
-}
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#0f172a,#1e293b);color:white;}
+header{text-align:center;padding:20px;}
+.container{max-width:1000px;margin:auto;padding:20px;}
+.card{background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;margin-bottom:20px;}
+input,textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
+button{width:100%;padding:10px;border:none;border-radius:8px;background:#3b82f6;color:white;font-weight:bold;cursor:pointer;}
+button:hover{opacity:0.85;}
+.progress{height:20px;background:#1e293b;border-radius:10px;overflow:hidden;margin-top:10px;}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#ef4444);}
 </style>
 </head>
 
 <body>
 
 <header>
-  <img src="icon-512.png" class="logo">
-  <h1>🛡 TrustNet AI Security</h1>
-  <p>Protecting Digital Identities Worldwide</p>
+<h1>🛡 TrustNet AI Security</h1>
 </header>
 
 <div class="container">
 
+<div class="card" id="authCard">
+<h2>Login / Register</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="register()">Register</button>
+<button onclick="login()">Login</button>
+<p id="authMessage"></p>
+</div>
+
+<div id="appContent" style="display:none;">
+
 <div class="card">
 <h2>🔍 Fake Account Detector</h2>
-
-<label>Profile Picture (0/1)</label>
-<input type="number" id="profile_pic">
-
-<label>Username Ratio</label>
-<input type="number" id="username_ratio">
-
-<label>Fullname Words</label>
-<input type="number" id="fullname_words">
-
-<label>Description Length</label>
-<input type="number" id="description_length">
-
-<button onclick="analyze()">Analyze Account</button>
-
-<div class="progress">
-<div class="progress-bar" id="progressBar"></div>
-</div>
-
+<input type="number" id="profile_pic" placeholder="Profile Pic (0 or 1)">
+<input type="number" id="username_ratio" placeholder="Username Ratio">
+<input type="number" id="fullname_words" placeholder="Fullname Words">
+<input type="number" id="description_length" placeholder="Description Length">
+<button onclick="analyze()">Analyze</button>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 <h3 id="result"></h3>
+</div>
 
+<div class="card">
+<h2>📩 Scam Message Detector</h2>
+<textarea id="scamMessage" placeholder="Paste suspicious message here..."></textarea>
+<button onclick="analyzeScam()">Analyze Message</button>
+<div class="progress"><div class="progress-bar" id="scamProgress"></div></div>
+<h3 id="scamResult"></h3>
+</div>
+
+<div class="card">
+<h2>📊 My Statistics</h2>
+<div id="stats"></div>
+<button onclick="loadStats()">Refresh Stats</button>
+<button onclick="logout()">Logout</button>
 </div>
 
 </div>
-
-<footer>
-TrustNet © 2026 | AI Cyber Defense Engine
-</footer>
+</div>
 
 <script>
-function sigmoid(x){
-  return 1/(1+Math.exp(-x));
+const SUPABASE_URL = "https://gqgautoknzselkoaxxld.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+function sigmoid(x){return 1/(1+Math.exp(-x));}
+
+// REGISTER
+async function register(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+
+  authMessage.innerText = error ? error.message : "Check your email to confirm registration";
 }
 
-function analyze(){
+// LOGIN
+async function login(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-  let profile_pic = parseFloat(document.getElementById("profile_pic").value) || 0;
-  let username_ratio = parseFloat(document.getElementById("username_ratio").value) || 0;
-  let fullname_words = parseFloat(document.getElementById("fullname_words").value) || 0;
-  let description_length = parseFloat(document.getElementById("description_length").value) || 0;
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-  // Dummy AI weights (replace later with real model weights)
-  let score = (
-    profile_pic * -1.2 +
-    username_ratio * 3.4 +
-    fullname_words * -0.8 +
-    description_length * 0.02
-  );
-
-  let probability = sigmoid(score);
-  let percent = Math.round(probability * 100);
-
-  document.getElementById("progressBar").style.width = percent + "%";
-
-  if(percent > 70){
-    document.getElementById("result").innerHTML = "🚨 High Risk Fake Profile ("+percent+"%)";
-  }
-  else if(percent > 40){
-    document.getElementById("result").innerHTML = "⚠ Medium Risk Profile ("+percent+"%)";
-  }
-  else{
-    document.getElementById("result").innerHTML = "✅ Low Risk Profile ("+percent+"%)";
+  if(error){
+    authMessage.innerText = error.message;
+  } else {
+    currentUser = data.user;
+    authCard.style.display = "none";
+    appContent.style.display = "block";
+    loadStats();
   }
 }
 
-// Register Service Worker
-if ('serviceWorker' in navigator) {
+// LOGOUT
+async function logout(){
+  await supabaseClient.auth.signOut();
+  location.reload();
+}
+
+// FAKE ACCOUNT ANALYSIS
+async function analyze(){
+  let p=parseFloat(profile_pic.value)||0;
+  let u=parseFloat(username_ratio.value)||0;
+  let f=parseFloat(fullname_words.value)||0;
+  let d=parseFloat(description_length.value)||0;
+
+  let score=p*-1.2+u*3.4+f*-0.8+d*0.02;
+  let percent=Math.round(sigmoid(score)*100);
+
+  progressBar.style.width=percent+"%";
+  result.innerText=percent+"% Risk";
+
+  if(currentUser){
+    await supabaseClient.from('scans').insert([{
+      user_id: currentUser.id,
+      type: "fake_account",
+      risk: percent,
+      accuracy: 100 - percent
+    }]);
+  }
+}
+
+// SCAM MESSAGE ANALYSIS
+async function analyzeScam(){
+  let msg=scamMessage.value.toLowerCase();
+  let keywords=["urgent","otp","click","login","bitcoin","bank","free","prize","verify"];
+  let score=0;
+
+  keywords.forEach(w=>{ if(msg.includes(w)) score+=12; });
+  if(msg.includes("http")) score+=15;
+  if(score>100) score=100;
+
+  scamProgress.style.width=score+"%";
+  scamResult.innerText=score+"% Scam Risk";
+
+  if(currentUser){
+    await supabaseClient.from('scans').insert([{
+      user_id: currentUser.id,
+      type: "scam",
+      risk: score,
+      accuracy: 100 - score
+    }]);
+  }
+}
+
+// LOAD STATS
+async function loadStats(){
+  const { data } = await supabaseClient
+    .from('scans')
+    .select('*')
+    .eq('user_id', currentUser.id);
+
+  if(!data) return;
+
+  let total=data.length;
+  let high=data.filter(d=>d.risk>70).length;
+  let medium=data.filter(d=>d.risk>40&&d.risk<=70).length;
+  let low=data.filter(d=>d.risk<=40).length;
+
+  let accuracy = total ? 
+    (data.reduce((a,b)=>a+b.accuracy,0)/total).toFixed(2)
+    : 0;
+
+  stats.innerHTML=
+    "Total Scans: "+total+"<br>"+
+    "High Risk: "+high+"<br>"+
+    "Medium Risk: "+medium+"<br>"+
+    "Low Risk: "+low+"<br>"+
+    "Average Accuracy: "+accuracy+"%";
+}
+
+// SESSION CHECK
+supabaseClient.auth.getSession().then(({data})=>{
+  if(data.session){
+    currentUser = data.session.user;
+    authCard.style.display="none";
+    appContent.style.display="block";
+    loadStats();
+  }
+});
+
+// SERVICE WORKER
+if('serviceWorker' in navigator){
   navigator.serviceWorker.register('service-worker.js');
 }
 </script>
 
 </body>
-</html>
+</ht
