@@ -133,7 +133,7 @@ button:hover{opacity:0.85;}
 
 <script>
 const SUPABASE_URL = "https://gqgautoknzselkoaxxld.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0"; // keep your real key
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -141,7 +141,7 @@ let currentUser = null;
 
 function sigmoid(x){ return 1/(1+Math.exp(-x)); }
 
-// REGISTER
+// ================= REGISTER =================
 async function registerUser(){
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -157,7 +157,7 @@ async function registerUser(){
     error ? error.message : "Registration successful. Check email if confirmation enabled.";
 }
 
-// LOGIN
+// ================= LOGIN =================
 async function loginUser(){
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -167,25 +167,33 @@ async function loginUser(){
     return;
   }
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
   if(error){
     document.getElementById("authMessage").innerText = error.message;
-  } else {
-    currentUser = data.user;
-    document.getElementById("authCard").style.display = "none";
-    document.getElementById("appContent").style.display = "block";
-    loadStats();
   }
 }
 
-// LOGOUT
+// ================= LOGOUT =================
 async function logoutUser(){
   await supabaseClient.auth.signOut();
-  location.reload();
 }
 
-// FAKE ACCOUNT
+// ================= AUTH STATE LISTENER (IMPORTANT FIX) =================
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if(session){
+    currentUser = session.user;
+    document.getElementById("authCard").style.display = "none";
+    document.getElementById("appContent").style.display = "block";
+    loadStats();
+  } else {
+    currentUser = null;
+    document.getElementById("authCard").style.display = "block";
+    document.getElementById("appContent").style.display = "none";
+  }
+});
+
+// ================= FAKE ACCOUNT =================
 async function analyze(){
   let p = parseFloat(document.getElementById("profile_pic").value) || 0;
   let u = parseFloat(document.getElementById("username_ratio").value) || 0;
@@ -201,7 +209,7 @@ async function analyze(){
   saveScan("fake_account", percent);
 }
 
-// SCAM MESSAGE
+// ================= SCAM MESSAGE =================
 async function analyzeScam(){
   let msg = document.getElementById("scamMessage").value.toLowerCase();
   let keywords=["urgent","otp","click","login","bitcoin","bank","free","prize","verify"];
@@ -217,7 +225,7 @@ async function analyzeScam(){
   saveScan("scam", score);
 }
 
-// SAVE SCAN
+// ================= SAVE SCAN =================
 async function saveScan(type, risk){
   if(!currentUser) return;
 
@@ -229,7 +237,7 @@ async function saveScan(type, risk){
   }]);
 }
 
-// PROGRESS BAR COLOR
+// ================= PROGRESS BAR =================
 function setBar(id, value){
   let bar = document.getElementById(id);
   bar.style.width = value + "%";
@@ -240,8 +248,10 @@ function setBar(id, value){
   else bar.classList.add("high");
 }
 
-// LOAD STATS
+// ================= LOAD STATS =================
 async function loadStats(){
+  if(!currentUser) return;
+
   const { data } = await supabaseClient
     .from('scans')
     .select('*')
@@ -266,16 +276,7 @@ async function loadStats(){
     "Average Accuracy: "+accuracy+"%";
 }
 
-// SESSION RESTORE
-supabaseClient.auth.getSession().then(({data})=>{
-  if(data && data.session){
-    currentUser = data.session.user;
-    document.getElementById("authCard").style.display = "none";
-    document.getElementById("appContent").style.display = "block";
-    loadStats();
-  }
-});
-// SERVICE WORKER
+// ================= SERVICE WORKER =================
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('service-worker.js');
 }
