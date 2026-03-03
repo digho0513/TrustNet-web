@@ -268,14 +268,13 @@ async function loadStats(){
 
 // SESSION RESTORE
 supabaseClient.auth.getSession().then(({data})=>{
-  if(data.session){
+  if(data && data.session){
     currentUser = data.session.user;
-    document.getElementById("authCard").style.display="none";
-    document.getElementById("appContent").style.display="block";
+    document.getElementById("authCard").style.display = "none";
+    document.getElementById("appContent").style.display = "block";
     loadStats();
   }
 });
-
 // SERVICE WORKER
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('service-worker.js');
