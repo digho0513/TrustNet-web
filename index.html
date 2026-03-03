@@ -19,16 +19,13 @@ body{
 }
 
 header{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:15px;
+  text-align:center;
   padding:20px;
 }
 
 header img{
-  width:45px;
-  height:45px;
+  width:60px;
+  margin-bottom:10px;
 }
 
 .container{
@@ -42,7 +39,6 @@ header img{
   padding:20px;
   border-radius:15px;
   margin-bottom:20px;
-  backdrop-filter:blur(10px);
 }
 
 input,textarea{
@@ -77,21 +73,19 @@ button:hover{opacity:0.85;}
 .progress-bar{
   height:100%;
   width:0%;
-  transition:0.5s;
+  transition:0.4s;
 }
 
 .low{background:#22c55e;}
 .medium{background:#facc15;}
 .high{background:#ef4444;}
-
-h2{margin-top:0;}
 </style>
 </head>
 
 <body>
 
 <header>
-<img src="/icon.png" alt="TrustNet Logo">
+<img src="icon.png" alt="TrustNet Logo">
 <h1>TrustNet AI Security</h1>
 </header>
 
@@ -101,8 +95,8 @@ h2{margin-top:0;}
 <h2>Login / Register</h2>
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
-<button onclick="register()">Register</button>
-<button onclick="login()">Login</button>
+<button onclick="registerUser()">Register</button>
+<button onclick="loginUser()">Login</button>
 <p id="authMessage"></p>
 </div>
 
@@ -122,7 +116,7 @@ h2{margin-top:0;}
 <div class="card">
 <h2>Scam Message Detector</h2>
 <textarea id="scamMessage" placeholder="Paste suspicious message here..."></textarea>
-<button onclick="analyzeScam()">Analyze Message</button>
+<button onclick="analyzeScam()">Analyze</button>
 <div class="progress"><div class="progress-bar" id="scamProgress"></div></div>
 <h3 id="scamResult"></h3>
 </div>
@@ -131,7 +125,7 @@ h2{margin-top:0;}
 <h2>My Statistics</h2>
 <div id="stats"></div>
 <button onclick="loadStats()">Refresh Stats</button>
-<button onclick="logout()">Logout</button>
+<button onclick="logoutUser()">Logout</button>
 </div>
 
 </div>
@@ -140,135 +134,150 @@ h2{margin-top:0;}
 <script>
 const SUPABASE_URL = "https://gqgautoknzselkoaxxld.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
+
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser=null;
+let currentUser = null;
 
-function sigmoid(x){return 1/(1+Math.exp(-x));}
+function sigmoid(x){ return 1/(1+Math.exp(-x)); }
 
 // REGISTER
-async function register(){
-  const email=emailInput.value;
-  const password=passwordInput.value;
+async function registerUser(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const {error}=await supabaseClient.auth.signUp({email,password});
-  authMessage.innerText=error?error.message:"Check email to confirm";
+  if(!email || !password){
+    document.getElementById("authMessage").innerText = "Enter email & password";
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+
+  document.getElementById("authMessage").innerText =
+    error ? error.message : "Registration successful. Check email if confirmation enabled.";
 }
 
 // LOGIN
-async function login(){
-  const email=emailInput.value;
-  const password=passwordInput.value;
+async function loginUser(){
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(!email || !password){
+    document.getElementById("authMessage").innerText = "Enter email & password";
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
   if(error){
-    authMessage.innerText=error.message;
-  }else{
-    currentUser=data.user;
-    authCard.style.display="none";
-    appContent.style.display="block";
+    document.getElementById("authMessage").innerText = error.message;
+  } else {
+    currentUser = data.user;
+    document.getElementById("authCard").style.display = "none";
+    document.getElementById("appContent").style.display = "block";
     loadStats();
   }
 }
 
 // LOGOUT
-async function logout(){
+async function logoutUser(){
   await supabaseClient.auth.signOut();
   location.reload();
 }
 
 // FAKE ACCOUNT
 async function analyze(){
-  let p=parseFloat(profile_pic.value)||0;
-  let u=parseFloat(username_ratio.value)||0;
-  let f=parseFloat(fullname_words.value)||0;
-  let d=parseFloat(description_length.value)||0;
+  let p = parseFloat(document.getElementById("profile_pic").value) || 0;
+  let u = parseFloat(document.getElementById("username_ratio").value) || 0;
+  let f = parseFloat(document.getElementById("fullname_words").value) || 0;
+  let d = parseFloat(document.getElementById("description_length").value) || 0;
 
-  let score=p*-1.2+u*3.4+f*-0.8+d*0.02;
-  let percent=Math.round(sigmoid(score)*100);
+  let score = p*-1.2 + u*3.4 + f*-0.8 + d*0.02;
+  let percent = Math.round(sigmoid(score)*100);
 
-  setBar(progressBar,percent);
-  result.innerText=percent+"% Risk";
+  setBar("progressBar", percent);
+  document.getElementById("result").innerText = percent + "% Risk";
 
-  saveScan("fake_account",percent);
+  saveScan("fake_account", percent);
 }
 
 // SCAM MESSAGE
 async function analyzeScam(){
-  let msg=scamMessage.value.toLowerCase();
+  let msg = document.getElementById("scamMessage").value.toLowerCase();
   let keywords=["urgent","otp","click","login","bitcoin","bank","free","prize","verify"];
   let score=0;
 
-  keywords.forEach(w=>{if(msg.includes(w))score+=12;});
-  if(msg.includes("http"))score+=15;
-  if(score>100)score=100;
+  keywords.forEach(w=>{ if(msg.includes(w)) score+=12; });
+  if(msg.includes("http")) score+=15;
+  if(score>100) score=100;
 
-  setBar(scamProgress,score);
-  scamResult.innerText=score+"% Scam Risk";
+  setBar("scamProgress", score);
+  document.getElementById("scamResult").innerText = score + "% Scam Risk";
 
-  saveScan("scam",score);
+  saveScan("scam", score);
 }
 
-// SAVE TO DATABASE
-async function saveScan(type,risk){
-  if(!currentUser)return;
+// SAVE SCAN
+async function saveScan(type, risk){
+  if(!currentUser) return;
 
   await supabaseClient.from('scans').insert([{
-    user_id:currentUser.id,
-    type:type,
-    risk:risk,
-    accuracy:100-risk
+    user_id: currentUser.id,
+    type: type,
+    risk: risk,
+    accuracy: 100 - risk
   }]);
 }
 
 // PROGRESS BAR COLOR
-function setBar(bar,value){
-  bar.style.width=value+"%";
-  bar.className="progress-bar";
-  if(value<=40)bar.classList.add("low");
-  else if(value<=70)bar.classList.add("medium");
+function setBar(id, value){
+  let bar = document.getElementById(id);
+  bar.style.width = value + "%";
+  bar.className = "progress-bar";
+
+  if(value <= 40) bar.classList.add("low");
+  else if(value <= 70) bar.classList.add("medium");
   else bar.classList.add("high");
 }
 
 // LOAD STATS
 async function loadStats(){
-  const {data}=await supabaseClient
-  .from('scans')
-  .select('*')
-  .eq('user_id',currentUser.id);
+  const { data } = await supabaseClient
+    .from('scans')
+    .select('*')
+    .eq('user_id', currentUser.id);
 
-  if(!data)return;
+  if(!data) return;
 
   let total=data.length;
   let high=data.filter(d=>d.risk>70).length;
-  let medium=data.filter(d=>d.risk>40&&d.risk<=70).length;
+  let medium=data.filter(d=>d.risk>40 && d.risk<=70).length;
   let low=data.filter(d=>d.risk<=40).length;
 
-  let accuracy=total?
-  (data.reduce((a,b)=>a+b.accuracy,0)/total).toFixed(2)
-  :0;
+  let accuracy = total ?
+    (data.reduce((a,b)=>a+b.accuracy,0)/total).toFixed(2)
+    : 0;
 
-  stats.innerHTML=
-  "Total Scans: "+total+"<br>"+
-  "High Risk: "+high+"<br>"+
-  "Medium Risk: "+medium+"<br>"+
-  "Low Risk: "+low+"<br>"+
-  "Average Accuracy: "+accuracy+"%";
+  document.getElementById("stats").innerHTML =
+    "Total Scans: "+total+"<br>"+
+    "High Risk: "+high+"<br>"+
+    "Medium Risk: "+medium+"<br>"+
+    "Low Risk: "+low+"<br>"+
+    "Average Accuracy: "+accuracy+"%";
 }
 
-// SESSION CHECK
+// SESSION RESTORE
 supabaseClient.auth.getSession().then(({data})=>{
   if(data.session){
-    currentUser=data.session.user;
-    authCard.style.display="none";
-    appContent.style.display="block";
+    currentUser = data.session.user;
+    document.getElementById("authCard").style.display="none";
+    document.getElementById("appContent").style.display="block";
     loadStats();
   }
 });
 
 // SERVICE WORKER
-if('serviceWorker'in navigator){
+if('serviceWorker' in navigator){
   navigator.serviceWorker.register('service-worker.js');
 }
 </script>
