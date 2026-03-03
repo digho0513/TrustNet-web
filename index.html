@@ -11,22 +11,88 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:linear-gradient(135deg,#0f172a,#1e293b);color:white;}
-header{text-align:center;padding:20px;}
-.container{max-width:1000px;margin:auto;padding:20px;}
-.card{background:rgba(255,255,255,0.05);padding:20px;border-radius:15px;margin-bottom:20px;}
-input,textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
-button{width:100%;padding:10px;border:none;border-radius:8px;background:#3b82f6;color:white;font-weight:bold;cursor:pointer;}
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  padding:20px;
+}
+
+header img{
+  width:45px;
+  height:45px;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:rgba(255,255,255,0.06);
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:20px;
+  backdrop-filter:blur(10px);
+}
+
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#3b82f6;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
 button:hover{opacity:0.85;}
-.progress{height:20px;background:#1e293b;border-radius:10px;overflow:hidden;margin-top:10px;}
-.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#ef4444);}
+
+.progress{
+  height:20px;
+  background:#1e293b;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  transition:0.5s;
+}
+
+.low{background:#22c55e;}
+.medium{background:#facc15;}
+.high{background:#ef4444;}
+
+h2{margin-top:0;}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🛡 TrustNet AI Security</h1>
+<img src="/logo.png" alt="TrustNet Logo">
+<h1>TrustNet AI Security</h1>
 </header>
 
 <div class="container">
@@ -43,7 +109,7 @@ button:hover{opacity:0.85;}
 <div id="appContent" style="display:none;">
 
 <div class="card">
-<h2>🔍 Fake Account Detector</h2>
+<h2>Fake Account Detector</h2>
 <input type="number" id="profile_pic" placeholder="Profile Pic (0 or 1)">
 <input type="number" id="username_ratio" placeholder="Username Ratio">
 <input type="number" id="fullname_words" placeholder="Fullname Words">
@@ -54,7 +120,7 @@ button:hover{opacity:0.85;}
 </div>
 
 <div class="card">
-<h2>📩 Scam Message Detector</h2>
+<h2>Scam Message Detector</h2>
 <textarea id="scamMessage" placeholder="Paste suspicious message here..."></textarea>
 <button onclick="analyzeScam()">Analyze Message</button>
 <div class="progress"><div class="progress-bar" id="scamProgress"></div></div>
@@ -62,7 +128,7 @@ button:hover{opacity:0.85;}
 </div>
 
 <div class="card">
-<h2>📊 My Statistics</h2>
+<h2>My Statistics</h2>
 <div id="stats"></div>
 <button onclick="loadStats()">Refresh Stats</button>
 <button onclick="logout()">Logout</button>
@@ -72,37 +138,36 @@ button:hover{opacity:0.85;}
 </div>
 
 <script>
-const SUPABASE_URL = "https://gqgautoknzselkoaxxld.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
+const SUPABASE_URL = "PASTE_YOUR_URL_HERE";
+const SUPABASE_KEY = "PASTE_YOUR_ANON_KEY_HERE";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser = null;
+let currentUser=null;
 
 function sigmoid(x){return 1/(1+Math.exp(-x));}
 
 // REGISTER
 async function register(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email=emailInput.value;
+  const password=passwordInput.value;
 
-  const { error } = await supabaseClient.auth.signUp({ email, password });
-
-  authMessage.innerText = error ? error.message : "Check your email to confirm registration";
+  const {error}=await supabaseClient.auth.signUp({email,password});
+  authMessage.innerText=error?error.message:"Check email to confirm";
 }
 
 // LOGIN
 async function login(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email=emailInput.value;
+  const password=passwordInput.value;
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
 
   if(error){
-    authMessage.innerText = error.message;
-  } else {
-    currentUser = data.user;
-    authCard.style.display = "none";
-    appContent.style.display = "block";
+    authMessage.innerText=error.message;
+  }else{
+    currentUser=data.user;
+    authCard.style.display="none";
+    appContent.style.display="block";
     loadStats();
   }
 }
@@ -113,7 +178,7 @@ async function logout(){
   location.reload();
 }
 
-// FAKE ACCOUNT ANALYSIS
+// FAKE ACCOUNT
 async function analyze(){
   let p=parseFloat(profile_pic.value)||0;
   let u=parseFloat(username_ratio.value)||0;
@@ -123,72 +188,79 @@ async function analyze(){
   let score=p*-1.2+u*3.4+f*-0.8+d*0.02;
   let percent=Math.round(sigmoid(score)*100);
 
-  progressBar.style.width=percent+"%";
+  setBar(progressBar,percent);
   result.innerText=percent+"% Risk";
 
-  if(currentUser){
-    await supabaseClient.from('scans').insert([{
-      user_id: currentUser.id,
-      type: "fake_account",
-      risk: percent,
-      accuracy: 100 - percent
-    }]);
-  }
+  saveScan("fake_account",percent);
 }
 
-// SCAM MESSAGE ANALYSIS
+// SCAM MESSAGE
 async function analyzeScam(){
   let msg=scamMessage.value.toLowerCase();
   let keywords=["urgent","otp","click","login","bitcoin","bank","free","prize","verify"];
   let score=0;
 
-  keywords.forEach(w=>{ if(msg.includes(w)) score+=12; });
-  if(msg.includes("http")) score+=15;
-  if(score>100) score=100;
+  keywords.forEach(w=>{if(msg.includes(w))score+=12;});
+  if(msg.includes("http"))score+=15;
+  if(score>100)score=100;
 
-  scamProgress.style.width=score+"%";
+  setBar(scamProgress,score);
   scamResult.innerText=score+"% Scam Risk";
 
-  if(currentUser){
-    await supabaseClient.from('scans').insert([{
-      user_id: currentUser.id,
-      type: "scam",
-      risk: score,
-      accuracy: 100 - score
-    }]);
-  }
+  saveScan("scam",score);
+}
+
+// SAVE TO DATABASE
+async function saveScan(type,risk){
+  if(!currentUser)return;
+
+  await supabaseClient.from('scans').insert([{
+    user_id:currentUser.id,
+    type:type,
+    risk:risk,
+    accuracy:100-risk
+  }]);
+}
+
+// PROGRESS BAR COLOR
+function setBar(bar,value){
+  bar.style.width=value+"%";
+  bar.className="progress-bar";
+  if(value<=40)bar.classList.add("low");
+  else if(value<=70)bar.classList.add("medium");
+  else bar.classList.add("high");
 }
 
 // LOAD STATS
 async function loadStats(){
-  const { data } = await supabaseClient
-    .from('scans')
-    .select('*')
-    .eq('user_id', currentUser.id);
+  const {data}=await supabaseClient
+  .from('scans')
+  .select('*')
+  .eq('user_id',currentUser.id);
 
-  if(!data) return;
+  if(!data)return;
 
   let total=data.length;
   let high=data.filter(d=>d.risk>70).length;
   let medium=data.filter(d=>d.risk>40&&d.risk<=70).length;
   let low=data.filter(d=>d.risk<=40).length;
 
-  let accuracy = total ? 
-    (data.reduce((a,b)=>a+b.accuracy,0)/total).toFixed(2)
-    : 0;
+  let accuracy=total?
+  (data.reduce((a,b)=>a+b.accuracy,0)/total).toFixed(2)
+  :0;
 
   stats.innerHTML=
-    "Total Scans: "+total+"<br>"+
-    "High Risk: "+high+"<br>"+
-    "Medium Risk: "+medium+"<br>"+
-    "Low Risk: "+low+"<br>"+
-    "Average Accuracy: "+accuracy+"%";
+  "Total Scans: "+total+"<br>"+
+  "High Risk: "+high+"<br>"+
+  "Medium Risk: "+medium+"<br>"+
+  "Low Risk: "+low+"<br>"+
+  "Average Accuracy: "+accuracy+"%";
 }
 
 // SESSION CHECK
 supabaseClient.auth.getSession().then(({data})=>{
   if(data.session){
-    currentUser = data.session.user;
+    currentUser=data.session.user;
     authCard.style.display="none";
     appContent.style.display="block";
     loadStats();
@@ -196,10 +268,10 @@ supabaseClient.auth.getSession().then(({data})=>{
 });
 
 // SERVICE WORKER
-if('serviceWorker' in navigator){
+if('serviceWorker'in navigator){
   navigator.serviceWorker.register('service-worker.js');
 }
 </script>
 
 </body>
-</ht
+</html>
