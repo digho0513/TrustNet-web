@@ -15,113 +15,118 @@
 <style>
 
 body{
-margin:0;
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
-color:white;
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+    color:white;
 }
 
 /* NAVBAR */
 
 .navbar{
-display:flex;
-align-items:center;
-gap:10px;
-padding:15px 30px;
-background:rgba(0,0,0,0.3);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 30px;
+    background:rgba(0,0,0,0.3);
 }
 
 .navbar img{
-width:40px;
+    width:40px;
 }
 
 /* HERO */
 
 .hero{
-text-align:center;
-padding:40px 20px;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.hero-logo {
+    width: 100px;
+    margin-bottom: 20px;
 }
 
 .hero h1{
-font-size:36px;
-color:#c084fc;
-margin:0;
+    font-size:36px;
+    color:#c084fc;
+    margin:0;
 }
 
 .hero p{
-opacity:0.8;
+    opacity:0.8;
 }
 
 /* CONTAINER */
 
 .container{
-max-width:1000px;
-margin:auto;
-padding:20px;
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
 }
 
 /* CARDS */
 
 .card{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-border-radius:16px;
-padding:25px;
-box-shadow:0 8px 30px rgba(0,0,0,0.4);
-margin-bottom:25px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    border-radius:16px;
+    padding:25px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.4);
+    margin-bottom:25px;
 }
 
 /* INPUTS */
 
 input,textarea{
-width:100%;
-padding:12px;
-margin:8px 0;
-border-radius:8px;
-border:1px solid #6d28d9;
-background:#1f1b4d;
-color:white;
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:1px solid #6d28d9;
+    background:#1f1b4d;
+    color:white;
 }
 
 input:focus, textarea:focus{
-outline:none;
-border-color:#a855f7;
+    outline:none;
+    border-color:#a855f7;
 }
 
 /* BUTTON */
 
 button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:linear-gradient(135deg,#7c3aed,#a855f7);
-color:white;
-font-weight:bold;
-cursor:pointer;
-margin-top:8px;
-transition:0.3s;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(135deg,#7c3aed,#a855f7);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:8px;
+    transition:0.3s;
 }
 
 button:hover{
-transform:scale(1.03);
+    transform:scale(1.03);
 }
 
 /* PROGRESS BAR */
 
 .progress{
-height:20px;
-background:#1e293b;
-border-radius:10px;
-overflow:hidden;
-margin-top:10px;
+    height:20px;
+    background:#1e293b;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:10px;
 }
 
 .progress-bar{
-height:100%;
-width:0%;
-transition:width 0.8s ease;
-border-radius:10px;
+    height:100%;
+    width:0%;
+    transition:width 0.8s ease;
+    border-radius:10px;
 }
 
 .low{background:#22c55e;}
@@ -131,35 +136,38 @@ border-radius:10px;
 /* DASHBOARD STATS */
 
 .stats-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
 }
 
 .stat-card{
-background:#1f1b4d;
-padding:20px;
-border-radius:12px;
-text-align:center;
+    background:#1f1b4d;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
 }
 
 .stat-card h3{
-margin:0;
-font-size:28px;
+    margin:0;
+    font-size:28px;
 }
 
 /* MOBILE */
 
 @media(max-width:768px){
 
-.hero h1{
-font-size:28px;
-}
+    .hero h1{
+        font-size:28px;
+    }
 
-.container{
-padding:10px;
-}
+    .container{
+        padding:10px;
+    }
 
+    .hero-logo {
+        width: 70px;
+    }
 }
 
 </style>
@@ -170,15 +178,16 @@ padding:10px;
 <!-- NAVBAR -->
 
 <div class="navbar">
-<img src="icon.png">
-<strong>TrustNet</strong>
+    <img src="icon.png" alt="TrustNet Logo">
+    <strong>TrustNet</strong>
 </div>
 
 <!-- HERO -->
 
 <section class="hero">
-<h1>🛡 TrustNet AI Security</h1>
-<p>AI-powered detection for Fake Accounts & Scam Messages</p>
+    <img src="icon.png" alt="TrustNet Logo" class="hero-logo">
+    <h1>🛡 TrustNet AI Security</h1>
+    <p>AI-powered detection for Fake Accounts & Scam Messages</p>
 </section>
 
 <div class="container">
@@ -187,17 +196,17 @@ padding:10px;
 
 <div class="card" id="authCard">
 
-<h2>Login / Register</h2>
+    <h2>Login / Register</h2>
 
-<input type="email" id="email" placeholder="Email">
+    <input type="email" id="email" placeholder="Email">
 
-<input type="password" id="password" placeholder="Password">
+    <input type="password" id="password" placeholder="Password">
 
-<button onclick="registerUser()">Register</button>
+    <button onclick="registerUser()">Register</button>
 
-<button onclick="loginUser()">Login</button>
+    <button onclick="loginUser()">Login</button>
 
-<p id="authMessage"></p>
+    <p id="authMessage"></p>
 
 </div>
 
@@ -209,20 +218,20 @@ padding:10px;
 
 <div class="card">
 
-<h2>Fake Account Detector</h2>
+    <h2>Fake Account Detector</h2>
 
-<input type="number" id="profile_pic" placeholder="Profile Pic (0 or 1)">
-<input type="number" id="username_ratio" placeholder="Username Ratio">
-<input type="number" id="fullname_words" placeholder="Fullname Words">
-<input type="number" id="description_length" placeholder="Description Length">
+    <input type="number" id="profile_pic" placeholder="Profile Pic (0 or 1)">
+    <input type="number" id="username_ratio" placeholder="Username Ratio">
+    <input type="number" id="fullname_words" placeholder="Fullname Words">
+    <input type="number" id="description_length" placeholder="Description Length">
 
-<button onclick="analyze()">Analyze</button>
+    <button onclick="analyze()">Analyze</button>
 
-<div class="progress">
-<div class="progress-bar" id="progressBar"></div>
-</div>
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-<h3 id="result"></h3>
+    <h3 id="result"></h3>
 
 </div>
 
@@ -230,17 +239,17 @@ padding:10px;
 
 <div class="card">
 
-<h2>Scam Message Detector</h2>
+    <h2>Scam Message Detector</h2>
 
-<textarea id="scamMessage" placeholder="Paste suspicious message here"></textarea>
+    <textarea id="scamMessage" placeholder="Paste suspicious message here"></textarea>
 
-<button onclick="analyzeScam()">Analyze Message</button>
+    <button onclick="analyzeScam()">Analyze Message</button>
 
-<div class="progress">
-<div class="progress-bar" id="scamProgress"></div>
-</div>
+    <div class="progress">
+        <div class="progress-bar" id="scamProgress"></div>
+    </div>
 
-<h3 id="scamResult"></h3>
+    <h3 id="scamResult"></h3>
 
 </div>
 
@@ -248,34 +257,34 @@ padding:10px;
 
 <div class="card">
 
-<h2>My Security Dashboard</h2>
+    <h2>My Security Dashboard</h2>
 
-<div class="stats-grid">
+    <div class="stats-grid">
 
-<div class="stat-card">
-<h3 id="totalScans">0</h3>
-<p>Total Scans</p>
-</div>
+        <div class="stat-card">
+            <h3 id="totalScans">0</h3>
+            <p>Total Scans</p>
+        </div>
 
-<div class="stat-card">
-<h3 id="highRisk">0</h3>
-<p>High Risk</p>
-</div>
+        <div class="stat-card">
+            <h3 id="highRisk">0</h3>
+            <p>High Risk</p>
+        </div>
 
-<div class="stat-card">
-<h3 id="mediumRisk">0</h3>
-<p>Medium Risk</p>
-</div>
+        <div class="stat-card">
+            <h3 id="mediumRisk">0</h3>
+            <p>Medium Risk</p>
+        </div>
 
-<div class="stat-card">
-<h3 id="lowRisk">0</h3>
-<p>Low Risk</p>
-</div>
+        <div class="stat-card">
+            <h3 id="lowRisk">0</h3>
+            <p>Low Risk</p>
+        </div>
 
-</div>
+    </div>
 
-<button onclick="loadStats()">Refresh Stats</button>
-<button onclick="logoutUser()">Logout</button>
+    <button onclick="loadStats()">Refresh Stats</button>
+    <button onclick="logoutUser()">Logout</button>
 
 </div>
 
@@ -287,8 +296,8 @@ padding:10px;
 
 /* SUPABASE */
 
-const SUPABASE_URL="https://gqgautoknzselkoaxxld.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
 
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
@@ -300,12 +309,12 @@ function sigmoid(x){return 1/(1+Math.exp(-x));}
 
 async function registerUser(){
 
-let email=emailInput();
-let password=passwordInput();
+    let email=emailInput();
+    let password=passwordInput();
 
-const {error}=await supabaseClient.auth.signUp({email,password});
+    const {error}=await supabaseClient.auth.signUp({email,password});
 
-authMessage.innerText=error?error.message:"Registration successful";
+    authMessage.innerText=error?error.message:"Registration successful";
 
 }
 
@@ -313,27 +322,27 @@ authMessage.innerText=error?error.message:"Registration successful";
 
 async function loginUser(){
 
-let email=emailInput();
-let password=passwordInput();
+    let email=emailInput();
+    let password=passwordInput();
 
-const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
 
-if(error){
-authMessage.innerText=error.message;
-}
-else{
-currentUser=data.user;
-showApp();
-loadStats();
-}
+    if(error){
+        authMessage.innerText=error.message;
+    }
+    else{
+        currentUser=data.user;
+        showApp();
+        loadStats();
+    }
 
 }
 
 /* LOGOUT */
 
 async function logoutUser(){
-await supabaseClient.auth.signOut();
-location.reload();
+    await supabaseClient.auth.signOut();
+    location.reload();
 }
 
 /* INPUT HELPERS */
@@ -345,8 +354,8 @@ function passwordInput(){return document.getElementById("password").value.trim()
 
 function showApp(){
 
-document.getElementById("authCard").style.display="none";
-document.getElementById("appContent").style.display="block";
+    document.getElementById("authCard").style.display="none";
+    document.getElementById("appContent").style.display="block";
 
 }
 
@@ -354,22 +363,22 @@ document.getElementById("appContent").style.display="block";
 
 async function analyze(){
 
-result.innerHTML="Analyzing...";
+    result.innerHTML="Analyzing...";
 
-let p=parseFloat(profile_pic.value)||0;
-let u=parseFloat(username_ratio.value)||0;
-let f=parseFloat(fullname_words.value)||0;
-let d=parseFloat(description_length.value)||0;
+    let p=parseFloat(profile_pic.value)||0;
+    let u=parseFloat(username_ratio.value)||0;
+    let f=parseFloat(fullname_words.value)||0;
+    let d=parseFloat(description_length.value)||0;
 
-let score=p*-1.2+u*3.4+f*-0.8+d*0.02;
+    let score=p*-1.2+u*3.4+f*-0.8+d*0.02;
 
-let percent=Math.round(sigmoid(score)*100);
+    let percent=Math.round(sigmoid(score)*100);
 
-setBar("progressBar",percent);
+    setBar("progressBar",percent);
 
-result.innerHTML=percent+"% Risk";
+    result.innerHTML=percent+"% Risk";
 
-saveScan("fake_account",percent);
+    saveScan("fake_account",percent);
 
 }
 
@@ -377,25 +386,25 @@ saveScan("fake_account",percent);
 
 async function analyzeScam(){
 
-let msg=scamMessage.value.toLowerCase();
+    let msg=scamMessage.value.toLowerCase();
 
-let keywords=["urgent","otp","click","login","bitcoin","bank","free","verify","prize"];
+    let keywords=["urgent","otp","click","login","bitcoin","bank","free","verify","prize"];
 
-let score=0;
+    let score=0;
 
-keywords.forEach(k=>{
-if(msg.includes(k)) score+=12;
-});
+    keywords.forEach(k=>{
+        if(msg.includes(k)) score+=12;
+    });
 
-if(msg.includes("http")) score+=15;
+    if(msg.includes("http")) score+=15;
 
-if(score>100) score=100;
+    if(score>100) score=100;
 
-setBar("scamProgress",score);
+    setBar("scamProgress",score);
 
-scamResult.innerHTML=score+"% Scam Risk";
+    scamResult.innerHTML=score+"% Scam Risk";
 
-saveScan("scam",score);
+    saveScan("scam",score);
 
 }
 
@@ -403,15 +412,15 @@ saveScan("scam",score);
 
 function setBar(id,val){
 
-let bar=document.getElementById(id);
+    let bar=document.getElementById(id);
 
-bar.style.width=val+"%";
+    bar.style.width=val+"%";
 
-bar.className="progress-bar";
+    bar.className="progress-bar";
 
-if(val<=40) bar.classList.add("low");
-else if(val<=70) bar.classList.add("medium");
-else bar.classList.add("high");
+    if(val<=40) bar.classList.add("low");
+    else if(val<=70) bar.classList.add("medium");
+    else bar.classList.add("high");
 
 }
 
@@ -419,14 +428,14 @@ else bar.classList.add("high");
 
 async function saveScan(type,risk){
 
-if(!currentUser) return;
+    if(!currentUser) return;
 
-await supabaseClient.from("scans").insert([{
-user_id:currentUser.id,
-type:type,
-risk:risk,
-accuracy:100-risk
-}]);
+    await supabaseClient.from("scans").insert([{
+        user_id:currentUser.id,
+        type:type,
+        risk:risk,
+        accuracy:100-risk
+    }]);
 
 }
 
@@ -434,22 +443,22 @@ accuracy:100-risk
 
 async function loadStats(){
 
-const {data}=await supabaseClient
-.from("scans")
-.select("*")
-.eq("user_id",currentUser.id);
+    const {data}=await supabaseClient
+    .from("scans")
+    .select("*")
+    .eq("user_id",currentUser.id);
 
-if(!data) return;
+    if(!data) return;
 
-let total=data.length;
-let high=data.filter(d=>d.risk>70).length;
-let medium=data.filter(d=>d.risk>40&&d.risk<=70).length;
-let low=data.filter(d=>d.risk<=40).length;
+    let total=data.length;
+    let high=data.filter(d=>d.risk>70).length;
+    let medium=data.filter(d=>d.risk>40&&d.risk<=70).length;
+    let low=data.filter(d=>d.risk<=40).length;
 
-totalScans.innerText=total;
-highRisk.innerText=high;
-mediumRisk.innerText=medium;
-lowRisk.innerText=low;
+    totalScans.innerText=total;
+    highRisk.innerText=high;
+    mediumRisk.innerText=medium;
+    lowRisk.innerText=low;
 
 }
 
@@ -457,22 +466,22 @@ lowRisk.innerText=low;
 
 supabaseClient.auth.getSession().then(({data})=>{
 
-if(data.session){
+    if(data.session){
 
-currentUser=data.session.user;
+        currentUser=data.session.user;
 
-showApp();
+        showApp();
 
-loadStats();
+        loadStats();
 
-}
+    }
 
 });
 
 /* SERVICE WORKER */
 
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('service-worker.js');
+    navigator.serviceWorker.register('service-worker.js');
 }
 
 </script>
