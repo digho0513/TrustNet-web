@@ -153,6 +153,12 @@ button:hover{
     font-size:28px;
 }
 
+/* CUSTOM CURSOR */
+
+#authCard, #appContent {
+    cursor: url('cursors/sparkle.cur'), auto; /* path to your .cur file */
+}
+
 /* MOBILE */
 
 @media(max-width:768px){
@@ -296,8 +302,8 @@ button:hover{
 
 /* SUPABASE */
 
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL="https://gqgautoknzselkoaxxld.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZ2F1dG9rbnpzZWxrb2F4eGxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMjYzMjEsImV4cCI6MjA4NzcwMjMyMX0.ITmQ5Sd3kTQpVYbsvElk3U-08m0nFhh2bC13x_7iDD0";
 
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
@@ -436,6 +442,7 @@ async function saveScan(type,risk){
         risk:risk,
         accuracy:100-risk
     }]);
+
 
 }
 
